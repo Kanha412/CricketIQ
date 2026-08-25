@@ -1,153 +1,179 @@
-# CricketIQ 🏏
+# 🏏 CricketIQ
 
-> **AI-powered cricket analytics and tactical intelligence platform**
+> **AI-powered IPL analytics & tactical intelligence platform**
 
-CricketIQ transforms raw ball-by-ball cricket data from [Cricsheet](https://cricsheet.org) into
-deep analytical insights — using real statistical calculations, machine learning, and a grounded
-AI analyst that calls Python tools before generating any explanation.
+CricketIQ turns 1,243 IPL matches and 295,000+ ball-by-ball deliveries into interactive analytics — with a conversational AI analyst that queries real data before answering, never guessing.
 
----
-
-## Live Demo
-
-🚀 **[Launch CricketIQ](https://cricketiq.streamlit.app)** *(coming soon)*
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://cricketiq.streamlit.app)
+![Python](https://img.shields.io/badge/Python-3.11+-blue)
+![PostgreSQL](https://img.shields.io/badge/Database-Neon%20PostgreSQL-green)
+![License](https://img.shields.io/badge/License-MIT-yellow)
 
 ---
 
-## What CricketIQ Does
+## 🚀 Live Demo
 
-- **Match Autopsy** — Automated phase-by-phase investigation of any completed match
-- **Player Intelligence** — Multi-dimensional player profiles with rolling form metrics
-- **Batter vs Bowler Matchup Engine** — Head-to-head statistics with confidence indicators
-- **Win Probability Tracker** — Ball-by-ball win probability from a trained ML model
-- **What-If Simulator** — Monte Carlo simulation of alternate tactical decisions
-- **AI Cricket Analyst** — Agent that dispatches Python tools first, then narrates the findings
+**[cricketiq.streamlit.app](https://cricketiq.streamlit.app)** *(deploying soon)*
 
 ---
 
-## Tech Stack
+## ✨ Features
+
+| Page | What it does |
+|------|-------------|
+| 🏏 **Player Intelligence** | Career stats, phase breakdown (powerplay/middle/death), season trends, dismissal analysis, venue performance, scoring map by over |
+| ⚔️ **Matchup Engine** | Batter vs bowler head-to-head — balls faced, dismissals, dominance index, phase split, over-by-over breakdown |
+| 🏆 **Team Intelligence** | Win rates for all 19 teams, head-to-head records, venue analysis (bat-first %), toss impact, phase scoring patterns |
+| 🎯 **Win Probability** | ML model (XGBoost) trained on all IPL chases — input any match state and get win % + Monte Carlo score simulation |
+| 🤖 **AI Agent** | Conversational IPL analyst — asks the database before answering, never fabricates numbers. Powered by tool-calling LLM |
+
+---
+
+## 📊 Data
+
+- **Source:** [Cricsheet.org](https://cricsheet.org) — free, openly licensed ball-by-ball JSON
+- **Coverage:** IPL 2008–2026 · 1,243 matches · 295,732 deliveries · 964 players · 19 teams · 37 venues
+- **No live scraping** — downloaded as ZIP, bulk-ingested into PostgreSQL (Neon)
+
+---
+
+## 🛠️ Tech Stack
 
 | Layer | Technology |
 |-------|-----------|
-| Data Source | Cricsheet (ball-by-ball JSON) |
-| Analytics | Python · Pandas · NumPy |
-| Machine Learning | scikit-learn (Logistic Regression, XGBoost) |
-| Simulation | NumPy Monte Carlo |
-| Visualization | Matplotlib |
+| Language | Python 3.11+ |
+| Package manager | `uv` |
+| Database | PostgreSQL via [Neon](https://neon.tech) (serverless, free tier) |
+| Analytics | Pandas · NumPy |
+| Machine Learning | scikit-learn · XGBoost |
+| Simulation | NumPy Monte Carlo (10,000 innings) |
+| Visualisation | Matplotlib |
 | Frontend | Streamlit |
-| Database | PostgreSQL (Neon free tier) |
-| AI / LLM | Gemini 2.0 Flash (free tier) |
-| Embeddings | sentence-transformers (local, no API) |
-| Deployment | Streamlit Community Cloud · GitHub Actions |
+| AI / LLM | Gemini (tool-calling, free tier) |
+| Deployment | Streamlit Community Cloud |
 
-**Total running cost: ₹0/month**
+**Total running cost: ₹0 / month**
 
 ---
 
-## Quick Start (Local Development)
+## ⚡ Quick Start
 
 ### Prerequisites
 - Python 3.11+
-- PostgreSQL running locally (or a Neon free account)
-- `uv` package manager: `pip install uv`
+- A free [Neon](https://neon.tech) PostgreSQL account
+- A free [Google AI Studio](https://aistudio.google.com) API key (for the AI Agent)
 
-### Setup
+### 1 — Clone & install
 
 ```bash
-# 1. Clone the repository
-git clone https://github.com/yourusername/cricketiq.git
-cd cricketiq
+git clone https://github.com/Kanha412/CricketIQ.git
+cd CricketIQ
+pip install uv
+uv venv && uv sync
+```
 
-# 2. Install dependencies
-uv venv
-uv pip install -e ".[dev]"
+### 2 — Configure environment
 
-# 3. Configure environment
-cp .env.example .env
-# Edit .env with your DATABASE_URL and LLM_API_KEY
+```bash
+cp .streamlit/secrets.toml.example .env
+# Fill in DATABASE_URL and LLM_API_KEY
+```
 
-# 4. Set up the database
-alembic upgrade head
+`.env` format:
+```
+DATABASE_URL=postgresql://user:pass@host/db?sslmode=require
+LLM_API_KEY=your-key-here
+LLM_MODEL=gemini-3.6-flash
+```
 
-# 5. Download IPL sample data from Cricsheet
-python scripts/download_cricsheet.py --competitions ipl
+### 3 — Set up database
 
-# 6. Ingest data into PostgreSQL
-python scripts/ingest_matches.py
+```bash
+uv run alembic upgrade head
+```
 
-# 7. Launch the app
-streamlit run app/Home.py
+### 4 — Download & ingest IPL data
+
+```bash
+# Download IPL JSON from https://cricsheet.org/downloads/ → extract to data/raw/ipl/
+uv run python scripts/fast_ingest_neon.py
+```
+
+### 5 — Run
+
+```bash
+uv run streamlit run streamlit_app.py
 ```
 
 ---
 
-## Project Structure
+## 🗂️ Project Structure
 
 ```
-cricketiq/
-├── app/               # Streamlit pages and UI components
+CricketIQ/
+├── streamlit_app.py          # Home page (entry point)
+├── pages/
+│   ├── 1_🏏_Player_Intelligence.py
+│   ├── 2_⚔️_Matchup_Engine.py
+│   ├── 3_🏆_Team_Intelligence.py
+│   ├── 4_🎯_Win_Probability.py
+│   └── 5_🤖_AI_Agent.py
+├── app/
+│   ├── components.py         # Reusable UI components
+│   ├── utils.py              # Cached DB wrappers
+│   └── cloud.py              # Streamlit secrets bridge
 ├── src/
-│   ├── analytics/     # Pandas/NumPy analysis functions
-│   ├── models/        # ML models (win probability, player rating)
-│   ├── simulation/    # Monte Carlo what-if engine
-│   ├── ai/            # AI agent + LLM provider interfaces
-│   ├── visualization/ # Matplotlib chart functions
-│   └── db/            # Database queries and connection
-├── data/samples/      # Sample match JSONs for testing
-├── scripts/           # Data download, ingestion, training
-└── tests/             # Unit and integration tests
+│   ├── analytics/            # batting.py, bowling.py, matchup.py, team.py
+│   ├── ai/                   # agent.py, tools.py, prompts.py
+│   ├── db/                   # connection.py, queries.py, schema.py
+│   ├── models/               # win_probability.py, simulator.py
+│   └── visualization/        # batting_charts.py, bowling_charts.py, ...
+├── scripts/
+│   ├── fast_ingest_neon.py   # Bulk ingest (psycopg2 execute_values)
+│   └── normalize_venues.py   # One-time venue name deduplication
+├── tests/                    # 178 unit tests
+├── models/                   # Trained .joblib model files
+└── data/samples/             # Sample JSONs for testing
 ```
 
 ---
 
-## Data Source
+## 🤖 AI Agent Design
 
-All cricket data is from [Cricsheet.org](https://cricsheet.org) — free, openly licensed
-ball-by-ball data covering IPL, T20 Internationals, ODIs, Tests, and more.
-
-No live data scraping. Data is downloaded as ZIP files and ingested into PostgreSQL.
-
----
-
-## Architecture
+The AI Agent uses a **tool-calling pattern** — the LLM never calculates anything itself:
 
 ```
-Cricsheet JSON → Parse → Validate → PostgreSQL
-                                        ↓
-                               Analytics Engine
-                               (Pandas + NumPy)
-                                        ↓
-                              ┌─────────┴──────────┐
-                              ↓                    ↓
-                         Matplotlib           ML Models
-                           Charts          Win Probability
-                              ↓                    ↓
-                          AI Agent (tool-calling)
-                              ↓
-                          Streamlit UI
+User question
+     ↓
+ LLM decides which tool to call
+     ↓
+ Python function queries DB → runs analytics → returns JSON dict
+     ↓
+ LLM reads the real numbers and narrates the answer
 ```
 
----
+**8 tools available:** `get_batting_stats`, `get_bowling_stats`, `get_matchup`,
+`get_team_head_to_head`, `predict_win_probability`, `simulate_innings_score`,
+`search_player_name`, `get_venue_stats`
 
-## Development Roadmap
-
-- [x] Phase 1: Project foundation
-- [ ] Phase 2: Cricsheet data ingestion
-- [ ] Phase 3: Database schema + ingestion pipeline
-- [ ] Phase 4: Core analytics engine
-- [ ] Phase 5: Visualization layer
-- [ ] Phase 6: Streamlit UI (MVP pages)
-- [ ] Phase 7: Win probability ML model
-- [ ] Phase 8: AI analyst + Match Autopsy
-- [ ] Phase 9: What-If simulator
-- [ ] Phase 10: RAG knowledge base (V2)
-- [ ] Phase 11: FastAPI backend (V2)
-- [ ] Phase 12: Docker (V2)
+The agent auto-resolves player names (e.g. "Jasprit Bumrah" → "JJ Bumrah" from the DB) without user intervention.
 
 ---
 
-## License
+## 🚢 Deployment
 
-MIT License — see [LICENSE](LICENSE) for details.
+See [DEPLOYMENT.md](DEPLOYMENT.md) for full Neon + Streamlit Cloud instructions.
 
-Data from Cricsheet is licensed under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
+**Short version:**
+1. Push to GitHub
+2. Go to [share.streamlit.io](https://share.streamlit.io) → New app → select repo
+3. Add secrets in Streamlit Cloud settings (DATABASE_URL, LLM_API_KEY, LLM_MODEL)
+4. Deploy ✓
+
+---
+
+## 📝 License
+
+MIT License — see [LICENSE](LICENSE).
+
+Data from [Cricsheet.org](https://cricsheet.org) is licensed under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
