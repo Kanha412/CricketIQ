@@ -1,4 +1,4 @@
-"""
+﻿"""
 CricketIQ — AI Agent Chat Page
 ================================
 Conversational IPL analytics powered by Gemini 2.0 Flash + function calling.
@@ -29,17 +29,16 @@ require_db(cached_db_ok())
 
 # ── Page config ───────────────────────────────────────────────────────────────
 st.title("🤖 CricketIQ AI Agent")
-st.caption("Conversational IPL analytics · Powered by Gemini 2.0 Flash + tool calling")
+st.caption("Conversational IPL analytics · Powered by CricketIQ AI + tool calling")
 
 # ── API key guard ─────────────────────────────────────────────────────────────
 if not is_api_key_configured():
     st.warning(
-        "### ⚙️ Gemini API Key Required\n\n"
-        "The AI Agent needs a Gemini API key to work.\n\n"
-        "**Get a free key:** https://aistudio.google.com/apikey\n\n"
-        "**Then add it to your `.env` file:**\n"
+        "### ⚙️ AI API Key Required\n\n"
+        "The AI Agent needs an API key to work.\n\n"
+        "**Add it to your `.env` file:**\n"
         "```\n"
-        "LLM_API_KEY=AIza...\n"
+        "LLM_API_KEY=your-key-here\n"
         "```\n\n"
         "Restart the Streamlit app after saving the key."
     )
@@ -74,7 +73,8 @@ agent: CricketIQAgent = st.session_state["cricketiq_agent"]
 # ── Sidebar controls ───────────────────────────────────────────────────────────
 with st.sidebar:
     st.markdown("### 🤖 AI Agent")
-    st.markdown(f"**Messages:** {agent.message_count // 2}")
+    n_exchanges = len(st.session_state.get("chat_messages", [])) // 2
+    st.markdown(f"**Messages:** {n_exchanges}")
 
     if st.button("🔄 New conversation", use_container_width=True):
         agent.reset()
@@ -100,10 +100,62 @@ with st.sidebar:
     st.divider()
     st.markdown("### ℹ️ About")
     st.markdown(
-        "This agent has access to **ball-by-ball IPL data** from 2007–2024 "
+        "This agent has access to **ball-by-ball IPL data** from 2008–2024 "
         "(1,243 matches).\n\n"
         "It **never fabricates stats** — it calls data tools before answering."
     )
+
+# ── Tool log → human readable ─────────────────────────────────────────────────
+_TOOL_LABELS = {
+    "get_batting_stats":      ("📊", "Batting stats"),
+    "get_bowling_stats":      ("🎳", "Bowling stats"),
+    "get_matchup":            ("⚔️", "Batter vs bowler matchup"),
+    "get_team_head_to_head":  ("🏆", "Team head-to-head"),
+    "predict_win_probability":("🎯", "Win probability"),
+    "simulate_innings_score": ("🎲", "Innings simulation"),
+    "search_player_name":     ("🔍", "Player name search"),
+    "get_venue_stats":        ("🏟️", "Venue stats"),
+}
+
+def _tool_summary(call: dict) -> str | None:
+    """
+    Convert one tool call dict into a single plain-English line.
+    Returns None for failed lookups — callers skip those.
+    """
+    result = call.get("result", {})
+    if "error" in result:
+        return None   # internal retry — don't show to user
+
+    icon, label = _TOOL_LABELS.get(call["tool"], ("🔧", call["tool"]))
+    args = call.get("args", {})
+
+    subject = (
+        args.get("player_name")
+        or args.get("query")
+        or args.get("batter_name")
+        or args.get("team_a")
+        or args.get("venue_name")
+        or ""
+    )
+    suffix = f" for **{subject}**" if subject else ""
+    return f"{icon} {label}{suffix}"
+
+
+def _render_tool_log(tool_log: list[dict]) -> None:
+    """Render only successful lookups in a compact collapsed expander."""
+    if not tool_log:
+        return
+    lines   = [_tool_summary(c) for c in tool_log]
+    visible = [l for l in lines if l is not None]
+    if not visible:
+        return
+    n_retried = len(lines) - len(visible)
+    retry_note = f" · {n_retried} name lookup{'s' if n_retried != 1 else ''} resolved automatically" if n_retried else ""
+    label = f"🔍 Data verified from {len(visible)} source{'s' if len(visible) != 1 else ''}{retry_note}"
+    with st.expander(label, expanded=False):
+        for line in visible:
+            st.markdown(line)
+
 
 # ── Render existing chat history ───────────────────────────────────────────────
 chat_messages: list[dict] = st.session_state.get("chat_messages", [])
@@ -112,16 +164,7 @@ for msg in chat_messages:
     with st.chat_message(msg["role"]):
         st.markdown(msg["content"])
         if msg.get("tool_log"):
-            with st.expander(f"🔧 Tools used ({len(msg['tool_log'])} call{'s' if len(msg['tool_log']) != 1 else ''})", expanded=False):
-                for call in msg["tool_log"]:
-                    st.markdown(f"**`{call['tool']}`**")
-                    col_args, col_res = st.columns(2)
-                    with col_args:
-                        st.caption("Arguments")
-                        st.json(call["args"])
-                    with col_res:
-                        st.caption("Result")
-                        st.json(call["result"])
+            _render_tool_log(msg["tool_log"])
 
 # ── Handle pre-filled input from sidebar buttons ───────────────────────────────
 pending = st.session_state.pop("pending_input", None)
@@ -151,16 +194,7 @@ if user_input:
         st.markdown(reply)
 
         if tool_log:
-            with st.expander(f"🔧 Tools used ({len(tool_log)} call{'s' if len(tool_log) != 1 else ''})", expanded=False):
-                for call in tool_log:
-                    st.markdown(f"**`{call['tool']}`**")
-                    col_args, col_res = st.columns(2)
-                    with col_args:
-                        st.caption("Arguments")
-                        st.json(call["args"])
-                    with col_res:
-                        st.caption("Result")
-                        st.json(call["result"])
+            _render_tool_log(tool_log)
 
     chat_messages.append({
         "role":     "assistant",
@@ -168,6 +202,7 @@ if user_input:
         "tool_log": tool_log,
     })
     st.session_state["chat_messages"] = chat_messages
+    st.rerun()  # re-render so sidebar counter updates immediately
 
 # ── Empty state prompt ─────────────────────────────────────────────────────────
 if not chat_messages:
@@ -183,6 +218,6 @@ if not chat_messages:
 
 st.divider()
 st.caption(
-    "CricketIQ AI · Data: IPL 2007–2024 · Model: Gemini 2.0 Flash · "
+    "CricketIQ AI ·  Data: IPL 2008–2024  · "
     "Stats sourced from Cricsheet.org ball-by-ball records"
 )

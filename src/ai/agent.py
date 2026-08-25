@@ -207,7 +207,7 @@ class CricketIQAgent:
         reply, tool_log = agent.chat("How is Rohit Sharma's powerplay SR?")
     """
 
-    MAX_TOOL_ROUNDS = 5   # safety: stop if Gemini keeps calling tools indefinitely
+    MAX_TOOL_ROUNDS = 10  # safety: stop if LLM keeps calling tools indefinitely
 
     def __init__(self, model: Any, history: ConversationHistory) -> None:
         self._model   = model
@@ -230,9 +230,10 @@ class CricketIQAgent:
         if not _GENAI_AVAILABLE:
             raise RuntimeError("genai_not_installed")
 
+        model_name = os.getenv("LLM_MODEL", "gemini-3.6-flash")
         genai.configure(api_key=api_key)
         model = genai.GenerativeModel(
-            model_name    = "gemini-2.0-flash",
+            model_name    = model_name,
             system_instruction = SYSTEM_PROMPT,
             tools         = [{"function_declarations": _make_function_declarations()}],
         )

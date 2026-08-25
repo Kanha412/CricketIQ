@@ -212,7 +212,7 @@ with tab_win:
 with tab_sim:
     section("Monte Carlo Score Simulator", "🎲")
     st.markdown(
-        "Simulate **10,000 T20 innings** using historical IPL ball-outcome "
+        "Simulate **10,000 IPL innings** using historical IPL ball-outcome "
         "distributions to predict the score distribution."
     )
 

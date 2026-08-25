@@ -11,6 +11,7 @@ WHY A SEPARATE components.py:
 
 from __future__ import annotations
 
+import pandas as pd
 import streamlit as st
 
 
@@ -135,8 +136,8 @@ def format_result(row) -> str:
     dls     = row.get("dls_applied", False)
     suffix  = " (DLS)" if dls else ""
 
-    if wickets:
+    if pd.notna(wickets) and wickets:
         return f"{winner} won by {int(wickets)} wicket{'s' if int(wickets) != 1 else ''}{suffix}"
-    if runs:
+    if pd.notna(runs) and runs:
         return f"{winner} won by {int(runs)} run{'s' if int(runs) != 1 else ''}{suffix}"
     return f"{winner} won{suffix}"

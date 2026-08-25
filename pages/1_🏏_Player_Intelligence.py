@@ -1,4 +1,4 @@
-"""
+﻿"""
 CricketIQ — Player Intelligence Page
 ======================================
 Full batting and bowling analytics for any IPL player.
@@ -98,7 +98,7 @@ with st.sidebar:
             season_id = int(row["id"].iloc[0])
 
     st.divider()
-    st.caption("Data: IPL 2007–2024 · Cricsheet.org")
+    st.caption("Data: IPL 2008–2024 · Cricsheet.org")
 
 # ── Load data ─────────────────────────────────────────────────────────────────
 st.title(f"🏏 {selected_name}")
@@ -238,4 +238,4 @@ else:
     st.caption("IPL benchmarks: Economy ≈ 8.0 · Average ≈ 30 · SR ≈ 18 · Dot% ≈ 38%")
 
 st.divider()
-st.caption("CricketIQ · Data: Cricsheet.org · IPL 2007–2024")
+st.caption("CricketIQ · Data: Cricsheet.org · IPL 2008–2024")

@@ -53,7 +53,7 @@ def get_seasons(competition_id: int) -> pd.DataFrame:
             text("""
                 SELECT id, season
                 FROM seasons
-                WHERE competition_id = :comp_id
+                WHERE (:comp_id IS NULL OR competition_id = :comp_id)
                 ORDER BY season DESC
             """),
             conn,
@@ -91,11 +91,14 @@ def get_matches(
                     m.dls_applied,
                     v.name   AS venue,
                     v.city,
-                    s.season
+                    s.season,
+                    tt.name  AS toss_winner,
+                    m.toss_decision
                 FROM matches m
                 LEFT JOIN teams  t1 ON t1.id = m.team1_id
                 LEFT JOIN teams  t2 ON t2.id = m.team2_id
                 LEFT JOIN teams  tw ON tw.id = m.winner_id
+                LEFT JOIN teams  tt ON tt.id = m.toss_winner_id
                 LEFT JOIN venues  v ON v.id  = m.venue_id
                 LEFT JOIN seasons s ON s.id  = m.season_id
                 WHERE
@@ -299,10 +302,12 @@ def get_player_deliveries(
                     d.is_dot_ball,
                     d.is_legal_delivery,
                     d.extras_type,
-                    d.cumulative_runs
+                    d.cumulative_runs,
+                    v.name AS venue_name
                 FROM deliveries d
                 JOIN matches m ON m.id = d.match_id
-                LEFT JOIN seasons s ON s.id = m.season_id
+                LEFT JOIN seasons  s ON s.id = m.season_id
+                LEFT JOIN venues   v ON v.id = m.venue_id
                 WHERE {id_col} = :player_id
                     AND (:comp_id IS NULL OR m.competition_id = :comp_id)
                     AND (:season_id IS NULL OR m.season_id = :season_id)
@@ -343,6 +348,8 @@ def get_batter_bowler_deliveries(
                     d.runs_total,
                     d.is_wicket,
                     d.wicket_kind,
+                    d.batter_id,
+                    d.player_out_id,
                     d.is_boundary,
                     d.is_six,
                     d.is_dot_ball,
@@ -353,7 +360,6 @@ def get_batter_bowler_deliveries(
                 LEFT JOIN seasons s ON s.id = m.season_id
                 WHERE d.batter_id  = :batter_id
                   AND d.bowler_id  = :bowler_id
-                  AND d.is_legal_delivery = true
                   AND (:comp_id IS NULL OR m.competition_id = :comp_id)
                 ORDER BY m.match_date, d.over_number
             """),

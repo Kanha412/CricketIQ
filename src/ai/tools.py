@@ -56,14 +56,35 @@ logger = get_logger(__name__)
 
 def _resolve_player(name: str) -> tuple[int | None, str | None]:
     """
-    Search the DB for a player matching `name`.
-    Returns (player_id, canonical_name) or (None, None) if not found.
+    Resolve a player name to (player_id, canonical_name).
+
+    Cricsheet stores abbreviated names like "JJ Bumrah", "B Kumar", "TA Boult".
+    When the LLM passes a full name like "Jasprit Bumrah" we try two strategies:
+
+    1. Full-name fuzzy search  — catches "V Kohli", "MS Dhoni"
+    2. Surname-only search     — catches "Bumrah" → "JJ Bumrah",
+                                 "Kumar" → "B Kumar", "Boult" → "TA Boult"
+
+    This eliminates the need for the LLM to manually call search_player_name
+    before every stats lookup, saving 1–2 tool-call rounds per player.
     """
+    # Strategy 1: full name partial match
     results = search_players(name)
-    if results.empty:
-        return None, None
-    row = results.iloc[0]
-    return int(row["id"]), str(row["name"])
+    if not results.empty:
+        row = results.iloc[0]
+        return int(row["id"]), str(row["name"])
+
+    # Strategy 2: surname only (last word of the passed name)
+    parts = name.strip().split()
+    if len(parts) > 1:
+        surname = parts[-1]
+        if len(surname) > 3:          # skip trivial suffixes like "Jr", "de"
+            results = search_players(surname)
+            if not results.empty:
+                row = results.iloc[0]
+                return int(row["id"]), str(row["name"])
+
+    return None, None
 
 
 def _df_to_records(df: pd.DataFrame, max_rows: int = 20) -> list[dict]:

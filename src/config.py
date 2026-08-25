@@ -45,7 +45,7 @@ class Settings(BaseSettings):
         description="LLM provider to use. Options: gemini, groq, ollama"
     )
     llm_model: str = Field(
-        default="gemini-2.0-flash",
+        default="gemini-3.6-flash",
         description="Model name within the chosen provider"
     )
     llm_api_key: str = Field(

@@ -214,15 +214,18 @@ def get_scoring_by_over(df: pd.DataFrame) -> pd.DataFrame:
         .agg(
             balls_faced=("runs_batter", "count"),
             runs=("runs_batter", "sum"),
+            # Count only the innings where the batter actually faced a ball in
+            # this over — NOT total matches played (which would dilute the average
+            # by including matches where the batter never reached that over).
+            n_innings=("match_id", "nunique"),
         )
         .reset_index()
     )
     agg["sr"] = agg.apply(
         lambda r: strike_rate(r["runs"], r["balls_faced"]), axis=1
     )
-    # Normalise to per-over average (across however many times batter faced that over)
-    n_matches = df["match_id"].nunique()
-    agg["avg_runs_per_over"] = (agg["runs"] / n_matches).round(2)
+    # Average runs scored in this over per innings it was actually batted
+    agg["avg_runs_per_over"] = (agg["runs"] / agg["n_innings"]).round(2)
 
     return agg.sort_values("over_number")
 

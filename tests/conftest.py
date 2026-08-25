@@ -112,7 +112,7 @@ def mock_settings(monkeypatch):
     """
     monkeypatch.setenv("DATABASE_URL", "postgresql://test:test@localhost:5432/cricketiq_test")
     monkeypatch.setenv("LLM_PROVIDER", "gemini")
-    monkeypatch.setenv("LLM_MODEL", "gemini-2.0-flash")
+    monkeypatch.setenv("LLM_MODEL", "gemini-3.6-flash")
     monkeypatch.setenv("LLM_API_KEY", "fake-key-for-testing")
     monkeypatch.setenv("LOG_LEVEL", "WARNING")   # Quiet during tests
     monkeypatch.setenv("ENVIRONMENT", "testing")

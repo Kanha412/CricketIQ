@@ -159,7 +159,7 @@ def scoring_by_over_chart(
     ax.bar(df["over_number"], df["avg_runs_per_over"], color=colors, alpha=0.85)
 
     ax.set_xlabel("Over")
-    ax.set_ylabel("Avg Runs")
+    ax.set_ylabel("Avg Runs Scored (when batting in that over)")
     title = f"{player_name} — Scoring Map by Over" if player_name else "Scoring Map by Over"
     ax.set_title(title, fontweight="bold")
     ax.set_xticks(range(1, 21))
@@ -197,7 +197,7 @@ def dismissal_donut_chart(
         return empty_chart("No dismissal data available")
 
     df = dismissal_df.copy()
-    labels = [f"{row['wicket_kind']}\n({row['pct']:.0f}%)" for _, row in df.iterrows()]
+    labels = [f"{row['wicket_kind']}\n({int(row['count'])}, {row['pct']:.0f}%)" for _, row in df.iterrows()]
     sizes  = df["count"].tolist()
 
     # Colour cycle — use as many colours from the palette as needed

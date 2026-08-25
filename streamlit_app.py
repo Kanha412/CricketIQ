@@ -1,4 +1,4 @@
-"""
+﻿"""
 CricketIQ — Home Page
 =======================
 Entry point for the Streamlit multi-page app.
@@ -62,7 +62,7 @@ st.set_page_config(
 # ── Sidebar branding ─────────────────────────────────────────────────────────
 with st.sidebar:
     st.markdown("## 🏏 CricketIQ")
-    st.markdown("*AI-powered cricket analytics*")
+    st.markdown("*AI-powered IPL analytics*")
     st.divider()
     st.markdown(
         "**Navigate using the pages above** ↑\n\n"
@@ -71,7 +71,7 @@ with st.sidebar:
         "- 🏆 Team Intelligence"
     )
     st.divider()
-    st.caption("Data: Cricsheet.org · IPL 2007–2024")
+    st.caption("Data: Cricsheet.org · IPL 2008–2024")
 
 # ── DB guard ─────────────────────────────────────────────────────────────────
 require_db(cached_db_ok())
@@ -81,7 +81,7 @@ st.markdown(
     """
     <h1 style='text-align:center; color:#1A3A5C;'>🏏 CricketIQ</h1>
     <p style='text-align:center; color:#95A5A6; font-size:1.1rem;'>
-        AI-powered cricket analytics & tactical intelligence
+        AI-powered IPL analytics & tactical intelligence
     </p>
     """,
     unsafe_allow_html=True,
