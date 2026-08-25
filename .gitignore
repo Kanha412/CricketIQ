@@ -1,0 +1,104 @@
+# CricketIQ — Git Ignore Rules
+# ════════════════════════════════════════════════════════════════
+
+# ── Secrets — NEVER COMMIT ───────────────────────────────────────
+.env
+*.env
+.env.local
+.env.production
+
+# ── Python ───────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+eggs/
+parts/
+var/
+sdist/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+.installed.cfg
+MANIFEST
+*.spec
+
+# ── Virtual Environments ─────────────────────────────────────────
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+.uv/
+
+# ── Data Files — Too Large for Git ───────────────────────────────
+# data/samples/ IS committed (small test fixtures)
+# data/raw/ and data/processed/ are too large (1,243 JSON files)
+data/raw/
+data/processed/
+
+# ── ML Model Artifacts ────────────────────────────────────────────
+# models/*.joblib ARE committed — Streamlit Cloud needs them (no server-side training)
+# Only exclude large neural network weights
+*.h5
+*.pt
+*.pth
+# joblib/pkl OUTSIDE models/ are still excluded (temp files)
+# models/ itself is tracked
+
+# ── Logs ─────────────────────────────────────────────────────────
+logs/
+*.log
+
+# ── Jupyter ──────────────────────────────────────────────────────
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# ── IDEs & Editors ───────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── Testing & Coverage ───────────────────────────────────────────
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+coverage.xml
+*.cover
+
+# ── Type Checking ────────────────────────────────────────────────
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# ── Ruff ─────────────────────────────────────────────────────────
+.ruff_cache/
+
+# ── Streamlit ────────────────────────────────────────────────────
+.streamlit/secrets.toml   # Streamlit local secrets — never commit
+
+# ── Docker ───────────────────────────────────────────────────────
+# (Dockerfiles are committed, but not runtime volumes)
+
+# ── OS ───────────────────────────────────────────────────────────
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db

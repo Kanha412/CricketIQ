@@ -1,0 +1,18 @@
+[theme]
+# CricketIQ brand colours — matches src/visualization/style.py PALETTE
+primaryColor        = "#F4A300"   # secondary (amber) — buttons, selects
+backgroundColor     = "#FFFFFF"
+secondaryBackgroundColor = "#F0F4F8"
+textColor           = "#1A3A5C"   # primary (navy)
+font                = "sans serif"
+
+[server]
+# Streamlit Community Cloud ignores these but they help local dev
+headless            = true
+enableCORS          = false
+enableXsrfProtection = true
+maxUploadSize       = 10          # MB
+
+[runner]
+# Cache compatibility
+fastReruns          = true

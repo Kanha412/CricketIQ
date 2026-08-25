@@ -1,0 +1,134 @@
+# CricketIQ — Logging Configuration
+# ────────────────────────────────────────────────────────────────
+# Python's logging.config.dictConfig() reads this file.
+# Load it in your app with:
+#   import yaml, logging.config
+#   with open("configs/logging_config.yaml") as f:
+#       logging.config.dictConfig(yaml.safe_load(f))
+#
+# Log levels (most → least verbose):
+#   DEBUG → INFO → WARNING → ERROR → CRITICAL
+# ────────────────────────────────────────────────────────────────
+
+version: 1
+disable_existing_loggers: false   # Don't silence third-party library loggers
+
+# ── Formatters ───────────────────────────────────────────────────────────────
+formatters:
+
+  standard:
+    # Human-readable format for development
+    # Example: 2024-01-15 10:23:45 | INFO     | src.analytics.match | Processing match 1359475
+    format: "%(asctime)s | %(levelname)-8s | %(name)s | %(message)s"
+    datefmt: "%Y-%m-%d %H:%M:%S"
+
+  minimal:
+    # Short format for scripts/CLI output
+    format: "%(levelname)s: %(message)s"
+
+  json:
+    # Structured JSON for production (easier to parse in log aggregators)
+    # We use a simple format here; upgrade to python-json-logger in production
+    format: '{"time": "%(asctime)s", "level": "%(levelname)s", "logger": "%(name)s", "message": "%(message)s"}'
+    datefmt: "%Y-%m-%dT%H:%M:%S"
+
+# ── Handlers ─────────────────────────────────────────────────────────────────
+handlers:
+
+  console:
+    # Writes to stdout — visible in terminal + Streamlit logs
+    class: logging.StreamHandler
+    level: DEBUG
+    formatter: standard
+    stream: ext://sys.stdout
+
+  file:
+    # Writes to a rotating log file — keeps last 5 files of 10MB each
+    class: logging.handlers.RotatingFileHandler
+    level: INFO
+    formatter: standard
+    filename: logs/cricketiq.log
+    maxBytes: 10485760   # 10MB
+    backupCount: 5
+    encoding: utf-8
+
+  error_file:
+    # Separate file for ERROR and above — easier to monitor in production
+    class: logging.handlers.RotatingFileHandler
+    level: ERROR
+    formatter: standard
+    filename: logs/cricketiq_errors.log
+    maxBytes: 5242880    # 5MB
+    backupCount: 3
+    encoding: utf-8
+
+# ── Loggers ──────────────────────────────────────────────────────────────────
+loggers:
+
+  # Our application loggers — one per module using __name__
+  src:
+    level: DEBUG
+    handlers: [console, file]
+    propagate: false
+
+  src.data:
+    level: DEBUG      # Verbose during ingestion — see every parse step
+    handlers: [console, file]
+    propagate: false
+
+  src.analytics:
+    level: INFO
+    handlers: [console, file]
+    propagate: false
+
+  src.ai:
+    level: INFO       # Log tool calls and LLM interactions
+    handlers: [console, file]
+    propagate: false
+
+  src.db:
+    level: INFO
+    handlers: [console, file]
+    propagate: false
+
+  src.models:
+    level: INFO
+    handlers: [console, file]
+    propagate: false
+
+  src.simulation:
+    level: INFO
+    handlers: [console, file]
+    propagate: false
+
+  # Script loggers
+  scripts:
+    level: DEBUG
+    handlers: [console, file]
+    propagate: false
+
+  # Silence noisy third-party libraries
+  urllib3:
+    level: WARNING
+    handlers: [console]
+    propagate: false
+
+  httpx:
+    level: WARNING
+    handlers: [console]
+    propagate: false
+
+  sqlalchemy.engine:
+    level: WARNING    # Set to INFO to see every SQL query (very verbose)
+    handlers: [console]
+    propagate: false
+
+  streamlit:
+    level: WARNING
+    handlers: [console]
+    propagate: false
+
+# ── Root Logger ──────────────────────────────────────────────────────────────
+root:
+  level: WARNING          # Catch-all for anything not matched above
+  handlers: [console, error_file]
