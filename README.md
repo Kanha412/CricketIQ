@@ -13,7 +13,7 @@ CricketIQ turns 1,243 IPL matches and 295,000+ ball-by-ball deliveries into inte
 
 ## 🚀 Live Demo
 
-**[cricketiq.streamlit.app](https://cricketiq-ipl.streamlit.app/Win_Probability)**
+**[https://cricketiq-ipl.streamlit.app](https://cricketiq-ipl.streamlit.app)**
 
 ---
 
