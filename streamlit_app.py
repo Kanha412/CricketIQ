@@ -59,32 +59,36 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-# ── Replace "streamlit app" nav label with CricketIQ branding ────────────────
+# ── Logo in nav header (replaces "streamlit app") ────────────────────────────
+import base64
+_logo_svg = (
+    b'<svg xmlns="http://www.w3.org/2000/svg" width="180" height="36">'
+    b'<text x="2" y="28" font-family="Arial,sans-serif" font-size="23"'
+    b' font-weight="700" fill="#1A3A5C">&#127955; CricketIQ</text></svg>'
+)
+_logo_url = "data:image/svg+xml;base64," + base64.b64encode(_logo_svg).decode()
+try:
+    st.logo(_logo_url)   # Streamlit 1.36+ — replaces "streamlit app" in nav
+except AttributeError:
+    pass   # older Streamlit — silently skip
+
+# ── Global CSS fixes ──────────────────────────────────────────────────────────
 st.markdown(
     """
     <style>
-    /* Hide the default "streamlit app" text */
-    [data-testid="stSidebarNavHeader"] span { visibility: hidden; }
+    /* 1. Hide any remaining "streamlit app" text in nav header */
+    [data-testid="stSidebarNavHeader"] span,
+    [data-testid="stSidebarNavTitle"] { display: none !important; }
 
-    /* Inject "🏏 CricketIQ" in its place */
-    [data-testid="stSidebarNavHeader"]::before {
-        content: "🏏 CricketIQ";
-        visibility: visible;
-        font-size: 1.25rem;
-        font-weight: 700;
-        color: #1A3A5C;
-        display: block;
-        margin-bottom: 2px;
+    /* 2. Equal-height Explore cards */
+    div[data-testid="stHorizontalBlock"] > div[data-testid="stColumn"] > div {
+        height: 100%;
     }
-    /* Subtitle line */
-    [data-testid="stSidebarNavHeader"]::after {
-        content: "AI-powered IPL analytics";
-        visibility: visible;
-        font-size: 0.8rem;
-        color: #888888;
-        font-style: italic;
-        display: block;
-        margin-bottom: 4px;
+
+    /* 3. Selectbox — hide blinking cursor so it feels like a dropdown */
+    [data-testid="stSelectbox"] input {
+        caret-color: transparent !important;
+        cursor: pointer !important;
     }
     </style>
     """,
