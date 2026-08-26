@@ -45,6 +45,7 @@ dependencies = [
     "tenacity>=8.2.0",             # Retry logic for downloads / API calls
 
     # ── Utilities ─────────────────────────────────────────────────
+    "pyyaml>=6.0.0",               # YAML config loading (logging_config.yaml)
     "python-dotenv>=1.0.0",        # Load .env files
     "rich>=13.7.0",                # Pretty terminal output for scripts
     "click>=8.1.0",                # CLI interface for scripts
