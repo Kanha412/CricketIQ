@@ -59,7 +59,7 @@ with st.sidebar:
             season_id = int(row["id"].iloc[0])
 
     st.divider()
-    st.caption("Data: IPL 2008–2024 · Cricsheet.org")
+    st.caption("Data: IPL 2008–2026 · Cricsheet.org")
 
 # ── Load matches ──────────────────────────────────────────────────────────────
 st.title("🏆 Team Intelligence")
@@ -256,4 +256,4 @@ with tab_toss:
             )
 
 st.divider()
-st.caption("CricketIQ · Data: Cricsheet.org · IPL 2008–2024")
+st.caption("CricketIQ · Data: Cricsheet.org · IPL 2008–2026")

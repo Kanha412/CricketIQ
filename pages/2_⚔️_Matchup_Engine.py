@@ -69,7 +69,7 @@ with st.sidebar:
     bowler_id   = name_to_id[bowler_name]
 
     st.divider()
-    st.caption("Data: IPL 2008–2024 · Cricsheet.org")
+    st.caption("Data: IPL 2008–2026 · Cricsheet.org")
 
 # ── Guard: same player ────────────────────────────────────────────────────────
 if batter_id == bowler_id:
@@ -175,4 +175,4 @@ with st.expander("📋 All meetings (raw)"):
     st.dataframe(show, use_container_width=True, hide_index=True)
 
 st.divider()
-st.caption("CricketIQ · Data: Cricsheet.org · IPL 2008–2024")
+st.caption("CricketIQ · Data: Cricsheet.org · IPL 2008–2026")

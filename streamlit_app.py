@@ -71,7 +71,7 @@ with st.sidebar:
         "- 🏆 Team Intelligence"
     )
     st.divider()
-    st.caption("Data: Cricsheet.org · IPL 2008–2024")
+    st.caption("Data: Cricsheet.org · IPL 2008–2026")
 
 # ── DB guard ─────────────────────────────────────────────────────────────────
 require_db(cached_db_ok())
@@ -114,9 +114,11 @@ n1, n2, n3 = st.columns(3)
 with n1:
     st.markdown(
         """
-        <div style='background:#F0F4F8; border-radius:12px; padding:20px; text-align:center; border-left:4px solid #1A3A5C;'>
-            <h3>🏏 Player Intelligence</h3>
-            <p style='color:#555;'>Career stats, phase breakdowns, season trends, dismissal analysis for any IPL player.</p>
+        <div style='background:#F0F4F8; border-radius:12px; padding:20px; text-align:center;
+                    border-left:4px solid #1A3A5C; min-height:130px; display:flex;
+                    flex-direction:column; justify-content:center;'>
+            <h3 style='margin:0 0 8px 0;'>🏏 Player Intelligence</h3>
+            <p style='color:#555; margin:0;'>Career stats, phase breakdowns, season trends, dismissal analysis for any IPL player.</p>
         </div>
         """,
         unsafe_allow_html=True,
@@ -125,9 +127,11 @@ with n1:
 with n2:
     st.markdown(
         """
-        <div style='background:#F0F4F8; border-radius:12px; padding:20px; text-align:center; border-left:4px solid #F4A300;'>
-            <h3>⚔️ Matchup Engine</h3>
-            <p style='color:#555;'>Head-to-head analysis between any batter and bowler across all IPL seasons.</p>
+        <div style='background:#F0F4F8; border-radius:12px; padding:20px; text-align:center;
+                    border-left:4px solid #F4A300; min-height:130px; display:flex;
+                    flex-direction:column; justify-content:center;'>
+            <h3 style='margin:0 0 8px 0;'>⚔️ Matchup Engine</h3>
+            <p style='color:#555; margin:0;'>Head-to-head analysis between any batter and bowler across all IPL seasons.</p>
         </div>
         """,
         unsafe_allow_html=True,
@@ -136,9 +140,11 @@ with n2:
 with n3:
     st.markdown(
         """
-        <div style='background:#F0F4F8; border-radius:12px; padding:20px; text-align:center; border-left:4px solid #2ECC71;'>
-            <h3>🏆 Team Intelligence</h3>
-            <p style='color:#555;'>Win rates, head-to-head records, venue analysis, toss impact, phase scoring patterns.</p>
+        <div style='background:#F0F4F8; border-radius:12px; padding:20px; text-align:center;
+                    border-left:4px solid #2ECC71; min-height:130px; display:flex;
+                    flex-direction:column; justify-content:center;'>
+            <h3 style='margin:0 0 8px 0;'>🏆 Team Intelligence</h3>
+            <p style='color:#555; margin:0;'>Win rates, head-to-head records, venue analysis, toss impact, phase scoring patterns.</p>
         </div>
         """,
         unsafe_allow_html=True,

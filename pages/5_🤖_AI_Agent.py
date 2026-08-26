@@ -100,7 +100,7 @@ with st.sidebar:
     st.divider()
     st.markdown("### ℹ️ About")
     st.markdown(
-        "This agent has access to **ball-by-ball IPL data** from 2008–2024 "
+        "This agent has access to **ball-by-ball IPL data** from 2008–2026 "
         "(1,243 matches).\n\n"
         "It **never fabricates stats** — it calls data tools before answering."
     )
@@ -218,6 +218,6 @@ if not chat_messages:
 
 st.divider()
 st.caption(
-    "CricketIQ AI ·  Data: IPL 2008–2024  · "
+    "CricketIQ AI ·  Data: IPL 2008–2026  · "
     "Stats sourced from Cricsheet.org ball-by-ball records"
 )
