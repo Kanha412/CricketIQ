@@ -59,32 +59,40 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-# ── Hide default "streamlit app" nav header, inject custom branding ──────────
+# ── Replace "streamlit app" nav label with CricketIQ branding ────────────────
 st.markdown(
     """
     <style>
-    /* Hide the default "streamlit app" navigation label */
-    [data-testid="stSidebarNavHeader"] { display: none !important; }
-    /* Also hide via the nav link container top label (fallback) */
-    section[data-testid="stSidebar"] > div > div > div > div:first-child > div:first-child span {
-        display: none !important;
+    /* Hide the default "streamlit app" text */
+    [data-testid="stSidebarNavHeader"] span { visibility: hidden; }
+
+    /* Inject "🏏 CricketIQ" in its place */
+    [data-testid="stSidebarNavHeader"]::before {
+        content: "🏏 CricketIQ";
+        visibility: visible;
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #1A3A5C;
+        display: block;
+        margin-bottom: 2px;
+    }
+    /* Subtitle line */
+    [data-testid="stSidebarNavHeader"]::after {
+        content: "AI-powered IPL analytics";
+        visibility: visible;
+        font-size: 0.8rem;
+        color: #888888;
+        font-style: italic;
+        display: block;
+        margin-bottom: 4px;
     }
     </style>
     """,
     unsafe_allow_html=True,
 )
 
-# ── Sidebar branding ─────────────────────────────────────────────────────────
+# ── Sidebar footer (below nav links) ─────────────────────────────────────────
 with st.sidebar:
-    st.markdown("## 🏏 CricketIQ")
-    st.markdown("*AI-powered IPL analytics*")
-    st.divider()
-    st.markdown(
-        "**Navigate using the pages above** ↑\n\n"
-        "- 🏏 Player Intelligence\n"
-        "- ⚔️ Matchup Engine\n"
-        "- 🏆 Team Intelligence"
-    )
     st.divider()
     st.caption("Data: Cricsheet.org · IPL 2008–2026")
 
