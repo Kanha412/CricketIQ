@@ -64,7 +64,7 @@ import base64
 _logo_svg = (
     b'<svg xmlns="http://www.w3.org/2000/svg" width="180" height="36">'
     b'<text x="2" y="28" font-family="Arial,sans-serif" font-size="23"'
-    b' font-weight="700" fill="#1A3A5C">&#127955; CricketIQ</text></svg>'
+    b' font-weight="700" fill="#1A3A5C">CricketIQ</text></svg>'
 )
 _logo_url = "data:image/svg+xml;base64," + base64.b64encode(_logo_svg).decode()
 try:
@@ -142,7 +142,7 @@ with n1:
     st.markdown(
         """
         <div style='background:#F0F4F8; border-radius:12px; padding:20px; text-align:center;
-                    border-left:4px solid #1A3A5C; min-height:130px; display:flex;
+                    border-left:4px solid #1A3A5C; height:170px; display:flex;
                     flex-direction:column; justify-content:center;'>
             <h3 style='margin:0 0 8px 0;'>🏏 Player Intelligence</h3>
             <p style='color:#555; margin:0;'>Career stats, phase breakdowns, season trends, dismissal analysis for any IPL player.</p>
@@ -155,7 +155,7 @@ with n2:
     st.markdown(
         """
         <div style='background:#F0F4F8; border-radius:12px; padding:20px; text-align:center;
-                    border-left:4px solid #F4A300; min-height:130px; display:flex;
+                    border-left:4px solid #F4A300; height:170px; display:flex;
                     flex-direction:column; justify-content:center;'>
             <h3 style='margin:0 0 8px 0;'>⚔️ Matchup Engine</h3>
             <p style='color:#555; margin:0;'>Head-to-head analysis between any batter and bowler across all IPL seasons.</p>
@@ -168,7 +168,7 @@ with n3:
     st.markdown(
         """
         <div style='background:#F0F4F8; border-radius:12px; padding:20px; text-align:center;
-                    border-left:4px solid #2ECC71; min-height:130px; display:flex;
+                    border-left:4px solid #2ECC71; height:170px; display:flex;
                     flex-direction:column; justify-content:center;'>
             <h3 style='margin:0 0 8px 0;'>🏆 Team Intelligence</h3>
             <p style='color:#555; margin:0;'>Win rates, head-to-head records, venue analysis, toss impact, phase scoring patterns.</p>
