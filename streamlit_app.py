@@ -59,6 +59,21 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
+# ── Hide default "streamlit app" nav header, inject custom branding ──────────
+st.markdown(
+    """
+    <style>
+    /* Hide the default "streamlit app" navigation label */
+    [data-testid="stSidebarNavHeader"] { display: none !important; }
+    /* Also hide via the nav link container top label (fallback) */
+    section[data-testid="stSidebar"] > div > div > div > div:first-child > div:first-child span {
+        display: none !important;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
 # ── Sidebar branding ─────────────────────────────────────────────────────────
 with st.sidebar:
     st.markdown("## 🏏 CricketIQ")
