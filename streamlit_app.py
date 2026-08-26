@@ -136,46 +136,31 @@ st.divider()
 
 # ── Quick navigation cards ────────────────────────────────────────────────────
 st.subheader("🚀 Explore")
-n1, n2, n3 = st.columns(3)
-
-with n1:
-    st.markdown(
-        """
-        <div style='background:#F0F4F8; border-radius:12px; padding:20px; text-align:center;
-                    border-left:4px solid #1A3A5C; height:170px; display:flex;
-                    flex-direction:column; justify-content:center;'>
-            <h3 style='margin:0 0 8px 0;'>🏏 Player Intelligence</h3>
-            <p style='color:#555; margin:0;'>Career stats, phase breakdowns, season trends, dismissal analysis for any IPL player.</p>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
-
-with n2:
-    st.markdown(
-        """
-        <div style='background:#F0F4F8; border-radius:12px; padding:20px; text-align:center;
-                    border-left:4px solid #F4A300; height:170px; display:flex;
-                    flex-direction:column; justify-content:center;'>
-            <h3 style='margin:0 0 8px 0;'>⚔️ Matchup Engine</h3>
-            <p style='color:#555; margin:0;'>Head-to-head analysis between any batter and bowler across all IPL seasons.</p>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
-
-with n3:
-    st.markdown(
-        """
-        <div style='background:#F0F4F8; border-radius:12px; padding:20px; text-align:center;
-                    border-left:4px solid #2ECC71; height:170px; display:flex;
-                    flex-direction:column; justify-content:center;'>
-            <h3 style='margin:0 0 8px 0;'>🏆 Team Intelligence</h3>
-            <p style='color:#555; margin:0;'>Win rates, head-to-head records, venue analysis, toss impact, phase scoring patterns.</p>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
+st.markdown(
+    """
+    <table style="width:100%; border-collapse:separate; border-spacing:16px 0; table-layout:fixed;">
+      <tr>
+        <td style="background:#F0F4F8; border-radius:12px; padding:24px 20px;
+                   border-left:4px solid #1A3A5C; text-align:center; vertical-align:middle; width:33%;">
+          <div style="font-size:1.3rem; font-weight:700; color:#1A3A5C; margin-bottom:10px;">🏏 Player Intelligence</div>
+          <div style="color:#555; font-size:0.95rem; line-height:1.5;">Career stats, phase breakdowns, season trends, dismissal analysis for any IPL player.</div>
+        </td>
+        <td style="background:#F0F4F8; border-radius:12px; padding:24px 20px;
+                   border-left:4px solid #F4A300; text-align:center; vertical-align:middle; width:33%;">
+          <div style="font-size:1.3rem; font-weight:700; color:#1A3A5C; margin-bottom:10px;">⚔️ Matchup Engine</div>
+          <div style="color:#555; font-size:0.95rem; line-height:1.5;">Head-to-head analysis between any batter and bowler across all IPL seasons.</div>
+        </td>
+        <td style="background:#F0F4F8; border-radius:12px; padding:24px 20px;
+                   border-left:4px solid #2ECC71; text-align:center; vertical-align:middle; width:33%;">
+          <div style="font-size:1.3rem; font-weight:700; color:#1A3A5C; margin-bottom:10px;">🏆 Team Intelligence</div>
+          <div style="color:#555; font-size:0.95rem; line-height:1.5;">Win rates, head-to-head records, venue analysis, toss impact, phase scoring patterns.</div>
+        </td>
+      </tr>
+    </table>
+    <br/>
+    """,
+    unsafe_allow_html=True,
+)
 
 st.divider()
 
